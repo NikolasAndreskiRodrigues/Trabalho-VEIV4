@@ -20,6 +20,10 @@ body {
   padding: 1rem 0;
 }
 
+.sidebar a {
+  text-decoration: none;
+}
+
 .sidebar i {
   display: block;
   text-align: center;

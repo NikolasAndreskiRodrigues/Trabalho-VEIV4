@@ -27,6 +27,10 @@ body {
   color: #444;
 }
 
+.sidebar a {
+  text-decoration: none;
+}
+
 .layout {
   display: flex;
 }

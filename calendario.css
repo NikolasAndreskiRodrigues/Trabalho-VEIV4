@@ -31,6 +31,10 @@ body {
   color: #444;
 }
 
+.sidebar a {
+  text-decoration: none;
+}
+
 .main-content {
   margin-left: 80px;
   padding: 2rem;
