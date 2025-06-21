@@ -51,7 +51,7 @@ body {
   border-radius: 10px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 100px rgba(0,0,0,0.1);
 }
 
 .form-box h2 {
@@ -89,8 +89,13 @@ button {
 .footer {
   display: flex;
   justify-content: space-around;
-  padding: 20px 30px;
+  padding: 40px;
   background-color: #fff;
   border-top: 1px solid #ddd;
   font-size: 14px;
+}
+
+.submit{
+  margin-top:20px;
+  border-radius:10px;
 }

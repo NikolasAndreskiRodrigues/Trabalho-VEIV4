@@ -27,6 +27,10 @@ body {
   color: #444;
 }
 
+.navbar-brand{
+  font-weight: bold;
+}
+
 .layout {
   display: flex;
 }
@@ -70,7 +74,8 @@ body {
 
 /* Profile box */
 .profile-box {
-  background-color: #ccc;
+  background-color: white;
+  border: 1px solid gray;
   padding: 30px;
   border-radius: 10px;
   font-weight: bold;
