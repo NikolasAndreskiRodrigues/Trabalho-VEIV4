@@ -5,6 +5,24 @@
   font-family: 'Inter', sans-serif;
 }
 
+.sidebar {
+  width: 60px;
+  background-color: #eaeaea;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 1rem 0;
+}
+
+.sidebar i {
+  display: block;
+  text-align: center;
+  font-size: 20px;
+  margin: 20px 0;
+  color: #444;
+}
+
 body {
   background-color: #fff;
   color: #111;
@@ -12,29 +30,6 @@ body {
 
 .layout {
   display: flex;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background-color: #dcdcdc;
-  padding: 30px 20px;
-  min-height: 100vh;
-}
-
-.sidebar h2 {
-  font-size: 24px;
-  margin-bottom: 30px;
-  line-height: 1.2;
-}
-
-.sidebar ul {
-  list-style: none;
-}
-
-.sidebar li {
-  margin-bottom: 20px;
-  font-weight: 500;
 }
 
 /* Conteúdo principal */

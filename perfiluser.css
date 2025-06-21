@@ -9,35 +9,26 @@ body {
   background-color: #f5f5f5;
 }
 
-/* Layout principal */
+.sidebar {
+  width: 60px;
+  background-color: #eaeaea;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 1rem 0;
+}
+
+.sidebar i {
+  display: block;
+  text-align: center;
+  font-size: 20px;
+  margin: 20px 0;
+  color: #444;
+}
+
 .layout {
   display: flex;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background-color: #ddd;
-  padding: 30px 20px;
-  min-height: 100vh;
-}
-
-.sidebar h2 {
-  margin-bottom: 30px;
-  font-size: 22px;
-}
-
-.sidebar ul {
-  list-style: none;
-  margin-bottom: 40px;
-}
-
-.sidebar li {
-  margin-bottom: 20px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .logout {
