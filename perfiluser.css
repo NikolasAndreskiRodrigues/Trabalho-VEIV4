@@ -9,6 +9,17 @@ body {
   background-color: #f5f5f5;
 }
 
+.topbar2 {
+    color: black;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.topbar2 a{
+    color: black;
+    text-decoration: none;
+}
+
 .sidebar {
   width: 60px;
   background-color: #eaeaea;
@@ -79,6 +90,15 @@ body {
   padding: 30px;
   border-radius: 10px;
   font-weight: bold;
+}
+
+.profile-box2 {
+  background-color: white;
+  padding: 30px;
+  border-radius: 60px;
+  font-weight: bold;
+  box-shadow: 0 6px 20px 0 rgb(0, 0, 0, 0.19);
+  margin-top: 20px;
 }
 
 .photo-section {
