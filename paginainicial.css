@@ -28,6 +28,10 @@ body {
   color: #444;
 }
 
+.sidebar a {
+  text-decoration: none;
+}
+
 .topbar {
   display: flex;
   justify-content: space-between;
