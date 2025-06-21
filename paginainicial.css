@@ -10,6 +10,17 @@ body {
   color: #000;
 }
 
+.topbar2 {
+    color: black;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.topbar2 a{
+    color: black;
+    text-decoration: none;
+}
+
 .sidebar {
   width: 60px;
   background-color: #eaeaea;
@@ -57,10 +68,14 @@ body {
   font-weight: bold;
 }
 
-/* Search */
 .search-section {
   padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 600px;
 }
+
 
 .search-section input {
   width: 100%;

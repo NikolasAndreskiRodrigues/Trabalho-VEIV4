@@ -27,10 +27,20 @@
       <nav class="navbar bg-white border-bottom px-4">
         <span class="navbar-brand"> Perfil de Usuário</span>
         <div class="eventos-links">
-          <a href="homeeventos.html" class="me-3 text-decoration-none">Home</a>
-          <a href="#" class="text-decoration-none">Próximos Eventos</a>
+          <a href="paginainicial.html" class="topbar2">Home</a>
+          <a href="Calendario.html" class="topbar2">Próximos Eventos</a>
         </div>
       </nav>
+
+      <div class="profile-box">
+  <h3>Foto de Perfil</h3>
+  <div class="photo-section">
+    <img id="preview" src="https://placehold.co/120x120" alt="Foto de perfil" style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px;" />
+    <input type="file" id="imagemInput" accept="image/*" style="display: none;" />
+    <button type="button" onclick="document.getElementById('imagemInput').click()">Carregar Imagem</button>
+  </div>
+
+
       <div class="topbar">
         <input type="text" placeholder="Procurar Evento" />
       </div>
@@ -41,6 +51,7 @@
           <img src="https://placehold.co/120x120" alt="Foto de perfil" />
           <button>Upload Image</button>
         </div>
+
 
         <form class="profile-form">
           <h4>Contato de Informação</h4>
@@ -60,5 +71,18 @@
     </main>
   </div>
 </div>
+<script>
+    // Quando o usuário seleciona um arquivo, atualiza a imagem
+    document.getElementById('imagemInput').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
 </body>
 </html>

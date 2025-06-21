@@ -12,13 +12,14 @@
 <body>
   <div class="container">
   <div class="sidebar">
-      <i class="fas fa-home"></i>
-      <i class="fas fa-search"></i>
-      <i class="fas fa-calendar"></i>
-      <i class="fas fa-plus-square"></i>
-      <i class="fas fa-cog"></i>
-      <i class="fas fa-sign-out-alt"></i>
-  </div>
+      <a href="paginainicial.html"><i class="fas fa-home"></i></a>
+      <a href="homeeventos.html"><i class="fas fa-search"></i></a>
+      <a href="Calendario.html"><i class="fas fa-calendar"></i></a>
+      <a href="adicionarevento.html"><i class="fas fa-plus-square"></i></a>
+      <a href="perfiluser.html"><i class="fas fa-cog"></i></a>
+      <a href="perfilempresarial.html"><i class="fa fa-building"></i></a>
+      <a href="paginainicial.html"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
 
     <!-- Conteúdo principal -->
     <main class="main-content">
@@ -26,16 +27,17 @@
       <nav class="navbar bg-white border-bottom px-4">
         <span class="navbar-brand"> Adicionar Evento </span>
         <div class="eventos-links">
-          <a href="homeeventos.html" class="me-3 text-decoration-none">Home</a>
-          <a href="#" class="text-decoration-none">Próximos Eventos</a>
+          <a href="paginainicial.html" class="topbar2">Home</a>
+          <a href="Calendario.html" class="topbar2">Próximos Eventos</a>
         </div>
       </nav>
 
       <div class="profile-box2">
         <h3>Foto do Evento</h3>
         <div class="photo-section">
-          <img src="https://placehold.co/120x120" alt="Foto de perfil" />
-          <button>Carregar Imagem</button>
+          <img id="preview" src="https://placehold.co/120x120" alt="Foto do Evento" style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px;" />
+          <input type="file" id="imagemInput" accept="image/*" style="display: none;" />
+          <button type="button" onclick="document.getElementById('imagemInput').click()">Carregar Imagem</button>
         </div>
 
         <form class="profile-form">
@@ -59,5 +61,20 @@
     </main>
   </div>
 </div>
+<script>
+    // Quando o usuário seleciona um arquivo, atualiza a imagem
+    document.getElementById('imagemInput').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
 </body>
 </html>
+
+
