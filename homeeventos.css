@@ -16,6 +16,16 @@
     color: #444;
 }
 
+.main-content a{
+    color: black;
+    font-weight: bold;
+}
+
+.main-content span{
+    color: black;
+    font-weight: bold;
+}
+
 .sidebar a {
     text-decoration: none;
 }
@@ -27,4 +37,8 @@
 
 .filter-buttons .btn {
     margin: 5px;
+}
+
+.input-group{
+    margin-top:20px;
 }
