@@ -44,6 +44,7 @@ body {
 .content {
   flex: 1;
   padding: 40px;
+  margin-left: 60px;
 }
 
 .calendar-header {
@@ -51,6 +52,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  font-weight: bold;;
 }
 
 .calendar-header h1 {
@@ -62,8 +64,9 @@ body {
   padding: 8px 14px;
   border: none;
   border-radius: 6px;
-  background-color: #5e666d;
-  color: white;
+  background-color: white;
+  color: black;
+  border: 2px solid black;
   cursor: pointer;
 }
 
@@ -136,4 +139,17 @@ body {
 .nav-links a:hover {
   text-decoration: underline;
   text-decoration: none;
+}
+
+.head{
+  margin-top: 10px;
+}
+
+.navbar-brand{
+  margin-left: 60px;
+  font-weight: bold;
+}
+
+.navbar a{
+  color: black;
 }
