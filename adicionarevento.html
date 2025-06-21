@@ -3,68 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adicionar Evento</title>
-  <link rel="stylesheet" href="adicionarevento.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <title>Perfil da Empresa</title>
+  <link rel="stylesheet" href="perfiluser.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-
-<div class="layout">
   <div class="container">
   <div class="sidebar">
-      <a href="paginainicial.html"><i class="fas fa-home"></i></a>
-      <a href="homeeventos.html"><i class="fas fa-search"></i></a>
-      <a href="Calendario.html"><i class="fas fa-calendar"></i></a>
-      <a href="adicionarevento.html"><i class="fas fa-plus-square"></i></a>
-      <a href="perfiluser.html"><i class="fas fa-cog"></i></a>
-      <a href="perfilempresarial.html"><i class="fa fa-building"></i></a>
-      <a href="paginainicial.html"><i class="fas fa-sign-out-alt"></i></a>
-    </div>
+      <i class="fas fa-home"></i>
+      <i class="fas fa-search"></i>
+      <i class="fas fa-calendar"></i>
+      <i class="fas fa-plus-square"></i>
+      <i class="fas fa-cog"></i>
+      <i class="fas fa-sign-out-alt"></i>
+  </div>
 
-  <!-- Conteúdo principal -->
-  <main class="main-content">
-    <div class="topbar">
-      <input type="text" placeholder="Procurar Eventos" />
-      <div class="top-icons">
-        <button class="btn-add">ADICIONAR</button>
-        <i>📅</i>
-        <i>📍</i>
-        <img src="https://placehold.co/30x30" alt="Usuário" class="avatar" />
-      </div>
-    </div>
-
-    <h1>Adicionar Evento</h1>
-
-    <section class="event-card">
-      <div class="event-header">
-        <div>
-          <h3>Workshop Garten T.I.</h3>
-          <p><strong>Duração:</strong> 2h</p>
-          <p><strong>Localização:</strong> Garten Shopping</p>
-          <p>Acesso Gratuito</p>
-          <p><strong>Início:</strong> 08:00</p>
-          <p><strong>Término:</strong> 10:00</p>
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+      
+      <nav class="navbar bg-white border-bottom px-4">
+        <span class="navbar-brand"> Adicionar Evento </span>
+        <div class="eventos-links">
+          <a href="homeeventos.html" class="me-3 text-decoration-none">Home</a>
+          <a href="#" class="text-decoration-none">Próximos Eventos</a>
         </div>
-        <div>
-          <img src="https://placehold.co/120x120" alt="Imagem do Evento" />
+      </nav>
+
+      <div class="profile-box">
+        <h3>Foto do Evento</h3>
+        <div class="photo-section">
+          <img src="https://placehold.co/120x120" alt="Foto de perfil" />
+          <button>Carregar Imagem</button>
         </div>
-      </div>
 
-      <hr />
+        <form class="profile-form">
+          <label>Duração:</label>
+          <input type="text" placeholder="Duração do Evento" required />
 
-      <div class="event-description">
-        <p>
-          Um workshop de TI é um evento que oferece uma forma prática e intensa
-          de aprender ou aprimorar habilidades e conhecimentos em áreas específicas da
-          Tecnologia da Informação. Geralmente, envolve aulas teóricas e atividades
-          práticas, com o objetivo de promover a compreensão e o desenvolvimento de competências.
-        </p>
+          <label> Acesso: </label>
+          <input type="text" placeholder="Tipo de Acesso" required />
+
+          <label> Inicio: </label>
+          <input type="text" placeholder="Horário/Data de Inicio" required />
+
+          <label> Término: </label>
+          <input type="text" placeholder="Horário/Data de Término" required />
+
+          <div class="buttons">
+            <button type="submit" class="apply">Adicionar</button>
+          </div>
+        </form>
       </div>
-    </section>
-  </main>
-</div>
+    </main>
+  </div>
 </div>
 </body>
 </html>

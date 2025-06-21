@@ -29,6 +29,7 @@ body {
 
 .sidebar a {
   text-decoration: none;
+}
 
 .layout {
   display: flex;
