@@ -36,11 +36,13 @@
       </div>
 
       <div class="profile-box">
-        <h3>Foto de Perfil</h3>
-        <div class="photo-section">
-          <img src="https://placehold.co/120x120" alt="Foto de perfil" />
-          <button>Upload Image</button>
-        </div>
+  <h3>Foto de Perfil</h3>
+  <div class="photo-section">
+    <img id="preview" src="https://placehold.co/120x120" alt="Foto de perfil" style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px;" />
+    <input type="file" id="imagemInput" accept="image/*" style="display: none;" />
+    <button type="button" onclick="document.getElementById('imagemInput').click()">Carregar Imagem</button>
+  </div>
+
 
         <form class="profile-form">
           <h4>Contato de Informação</h4>
@@ -60,5 +62,18 @@
     </main>
   </div>
 </div>
+<script>
+    // Quando o usuário seleciona um arquivo, atualiza a imagem
+    document.getElementById('imagemInput').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
 </body>
 </html>
