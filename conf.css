@@ -9,6 +9,17 @@ img#foto{
     margin: 0% 2%;
 }
 
+.topbar {
+    color: black;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.topbar a{
+    color: black;
+    text-decoration: none;
+}
+
 .sidebar {
     width: 60px;
     background-color: #eaeaea;

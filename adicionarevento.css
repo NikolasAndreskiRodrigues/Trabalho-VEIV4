@@ -5,6 +5,17 @@
   font-family: 'Inter', sans-serif;
 }
 
+.topbar2 {
+    color: black;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.topbar2 a{
+    color: black;
+    text-decoration: none;
+}
+
 .sidebar {
   width: 60px;
   background-color: #eaeaea;
@@ -42,7 +53,6 @@ body {
   background-color: #fff;
 }
 
-/* Topbar */
 .topbar {
   display: flex;
   justify-content: space-between;
