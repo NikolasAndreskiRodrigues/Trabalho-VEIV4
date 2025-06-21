@@ -27,9 +27,8 @@ body {
   color: #444;
 }
 
-.navbar-brand{
-  font-weight: bold;
-}
+.sidebar a {
+  text-decoration: none;
 
 .layout {
   display: flex;

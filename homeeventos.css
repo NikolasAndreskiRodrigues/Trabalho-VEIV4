@@ -1,14 +1,3 @@
-a{
-    font-weight: bold ;
-}
-nav span{
-    font-weight: bold ;
-
-}
-img#foto{
-    margin: 0% 2%;
-}
-
 .sidebar {
     width: 60px;
     background-color: #eaeaea;
@@ -29,4 +18,13 @@ img#foto{
 
 .sidebar a {
     text-decoration: none;
+}
+
+.main-content {
+    margin-left: 80px;
+    padding: 2rem;
+}
+
+.filter-buttons .btn {
+    margin: 5px;
 }
