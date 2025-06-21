@@ -44,12 +44,17 @@ body {
   background-color: #fff;
 }
 
+.eventos-links a{
+  color: black;
+}
+
 /* Topbar */
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  margin-top: 20px;
 }
 
 .topbar input {
@@ -68,6 +73,7 @@ body {
   background-color: #ccc;
   padding: 30px;
   border-radius: 10px;
+  font-weight: bold;
 }
 
 .photo-section {
