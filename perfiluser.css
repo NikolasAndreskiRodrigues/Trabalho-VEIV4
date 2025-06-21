@@ -1,0 +1,150 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+/* Layout principal */
+.layout {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #ddd;
+  padding: 30px 20px;
+  min-height: 100vh;
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+  font-size: 22px;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin-bottom: 40px;
+}
+
+.sidebar li {
+  margin-bottom: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout {
+  margin-top: auto;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background-color: #fff;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.topbar input {
+  width: 300px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.calendar-icon {
+  font-size: 20px;
+}
+
+/* Profile box */
+.profile-box {
+  background-color: #ccc;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.photo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.photo-section img {
+  border-radius: 6px;
+  width: 120px;
+  height: 120px;
+}
+
+.photo-section button {
+  padding: 6px 12px;
+  border: 1px solid #000;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Formulário */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-form input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  margin-bottom: 10px;
+}
+
+.email {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel {
+  background-color: #eee;
+  border: 1px solid #aaa;
+}
+
+.apply {
+  background-color: #b25645;
+  color: white;
+  border: none;
+}
+
+.update {
+  border: 1px solid #333;
+  background-color: white;
+}

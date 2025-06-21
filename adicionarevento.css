@@ -1,0 +1,112 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+.layout {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #ddd;
+  padding: 30px 20px;
+  min-height: 100vh;
+}
+
+.sidebar h2 {
+  font-size: 22px;
+  margin-bottom: 30px;
+  line-height: 1.2;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin-bottom: 40px;
+}
+
+.sidebar li {
+  margin-bottom: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Conteúdo principal */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background-color: #fff;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.topbar input {
+  width: 300px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.top-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-add {
+  background-color: #b25645;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+/* Card de evento */
+.event-card {
+  background-color: #ccc;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.event-header img {
+  width: 120px;
+  height: 120px;
+  border-radius: 6px;
+}
+
+.event-description {
+  margin-top: 20px;
+  line-height: 1.6;
+  font-size: 15px;
+}
