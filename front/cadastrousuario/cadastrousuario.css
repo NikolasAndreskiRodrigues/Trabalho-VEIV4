@@ -10,17 +10,7 @@ body {
   color: #000;
 }
 
-.topbar2 {
-    color: black;
-    text-decoration: none;
-    margin-right: 10px;
-}
-
-.topbar2 a{
-    color: black;
-    text-decoration: none;
-}
-
+/* Cabeçalho */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -41,13 +31,13 @@ body {
   margin-left: 25px;
 }
 
-/* Layout principal */
-.form-container {
+/* Conteúdo principal */
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px 30px;
   gap: 60px;
+  padding: 60px 30px;
 }
 
 .illustration img {
@@ -59,9 +49,9 @@ body {
   background-color: #fff;
   padding: 40px;
   border-radius: 10px;
-  max-width: 400px;
   width: 100%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  max-width: 400px;
+  box-shadow: 0 6px 100px rgba(0,0,0,0.1);
 }
 
 .form-box h2 {
@@ -76,51 +66,36 @@ form label {
   font-weight: 500;
 }
 
-form input[type="text"],
-form input[type="email"],
-form input[type="password"] {
+form input {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
 
-.checkbox {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 button {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 25px;
   padding: 12px;
-  border: none;
   background-color: #000;
   color: white;
+  font-weight: bold;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
-}
-
-.login-link {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 14px;
-}
-
-.login-link a {
-  text-decoration: none;
-  color: #007bff;
 }
 
 /* Rodapé */
 .footer {
   display: flex;
   justify-content: space-around;
-  padding: 20px 30px;
+  padding: 40px;
   background-color: #fff;
   border-top: 1px solid #ddd;
   font-size: 14px;
+}
+
+.submit{
+  margin-top:20px;
+  border-radius:10px;
 }
