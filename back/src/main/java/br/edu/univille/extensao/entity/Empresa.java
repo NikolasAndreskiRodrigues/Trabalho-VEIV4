@@ -18,4 +18,5 @@ public class Empresa {
     private String email;
     private String telefone;
     private String descricao;
+    private String senha;   
 }

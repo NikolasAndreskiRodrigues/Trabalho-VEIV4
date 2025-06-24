@@ -49,6 +49,11 @@ public class EventoController {
         return eventoRepository.findByOrderByDataDesc(pageable);
     }
 
+    @GetMapping("/por-data")
+    public Page<Evento> buscarPorData(@RequestParam String data) {
+        return eventoRepository.findByData(LocalDate.parse(data));
+    }
+
     @GetMapping
     public Page<Evento> filtrar(
         @RequestParam(required = false, defaultValue = "") String cidade,
@@ -65,6 +70,7 @@ public class EventoController {
     public Optional<Evento> getEvento(@PathVariable Long id) {
         return eventoRepository.findById(id);
     }
+
 
     @PostMapping
     public Evento criarEvento(@RequestBody Evento evento) {
@@ -94,4 +100,5 @@ public class EventoController {
         // Implemente busca por eventos da empresa
         return Page.empty();
     }
+
 }

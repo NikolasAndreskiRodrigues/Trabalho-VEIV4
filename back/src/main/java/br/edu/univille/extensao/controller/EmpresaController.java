@@ -30,6 +30,11 @@ public class EmpresaController {
         return empresaRepository.save(empresa);
     }
 
+    @PostMapping("/login")
+    public Empresa login(@RequestBody Empresa login) {
+        return empresaRepository.findByEmailAndSenha(login.getEmail(), login.getSenha()).orElse(null);
+    }
+
     @GetMapping
     public List<Empresa> listar() {
         return empresaRepository.findAll();
@@ -53,7 +58,6 @@ public class EmpresaController {
 
     @GetMapping("/home")
     public Empresa home() {
-        // Implemente lógica para buscar eventos da empresa, convites, etc
         return new Empresa();
     }
 }
