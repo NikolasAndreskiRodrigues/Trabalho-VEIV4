@@ -1,50 +1,69 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - Mapa de Eventos</title>
-  <link rel="stylesheet" href="Loginusuario.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mapa de Eventos de Joinville</title>
+    <link rel="stylesheet" href="../static/style.css" th:href="@{/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Cabeçalho -->
-  <header class="topbar">
-    <div class="logo"><strong>Mapa de Eventos de Joinville</strong></div>
-    <nav class="nav-links">
-      <a href="../paginainicial/paginainicial.html">Home</a>
-    </nav>
-  </header>
+    <div class="page-container">
+        <header class="main-header">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                </svg>
+                <span>Mapa de Eventos de Joinville</span>
+            </div>
+            <nav>
+                <a href="/" th:href="@{/}">Home</a>
+            </nav>
+        </header>
 
-  <!-- Conteúdo principal -->
-  <main class="login-container">
-    <div class="illustration">
-      <img src="../static/fotos/imagem-login.png" />
+        <main class="login-content">
+            <div class="illustration-side">
+                <img src="../static/joinvile.jpg" th:src="@{/joinville.jpg}" alt="Ilustração de pessoas representando a comunidade de eventos.">
+            </div>
+
+            <div class="form-side">
+                <div class="login-form-wrapper">
+                    <h2>Login</h2>
+
+                    <div th:if="${param.error}" style="background-color: #ffdddd; color: #d8000c; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                        Email ou senha inválidos.
+                    </div>
+
+                    <div th:if="${param.logout}" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                        Você saiu com sucesso.
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="senha">Senha</label>
+                            <input type="password" id="senha" name="password">
+                        </div>
+                        <button type="submit" class="login-button">Login</button>
+                    </form>
+                    <p class="redirect-link" style="margin-top: 15px;">
+                        Não tem uma conta? <a th:href="@{/cadastro}">Cadastre-se aqui</a>
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="main-footer">
+            <a href="#">Privacidade</a>
+            <a href="#">Termos e condições</a>
+            <a href="#">Contato</a>
+        </footer>
     </div>
-
-    <div class="form-box">
-      <h2>Login</h2>
-      <form>
-        <label>Email</label>
-        <input type="email" placeholder="email@exemplo.com" required />
-
-        <label>Senha</label>
-        <input type="password" placeholder="********" required />
-        
-        <button type="submit" class="submit">Login</button>
-      </form>
-    </div>
-  </main>
-
-  <!-- Rodapé -->
-  <footer class="footer">
-    <div>Privacidade</div>
-    <div>Termos e condições</div>
-    <div>Contato</div>
-  </footer>
 
 </body>
 </html>

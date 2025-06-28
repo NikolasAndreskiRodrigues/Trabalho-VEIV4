@@ -1,101 +1,197 @@
+/* --- CONFIGURAÇÕES GERAIS E FONTES --- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
 }
 
 body {
-  background-color: #fafafa;
-  color: #000;
-}
-
-/* Cabeçalho */
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.logo {
-  font-size: 18px;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #000;
-  font-weight: 500;
-  margin-left: 25px;
-}
-
-/* Conteúdo principal */
-.login-container {
+  font-family: 'Poppins', sans-serif; /* Fonte mais moderna, similar à da imagem */
+  background-color: #F8F0F0; /* Cor de fundo rosa claro da imagem */
+  color: #333;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 60px;
-  padding: 60px 30px;
+  min-height: 100vh;
 }
 
-.illustration img {
-  max-width: 400px;
-  border-radius: 10px;
-}
-
-.form-box {
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 10px;
+.page-container {
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 6px 100px rgba(0,0,0,0.1);
-}
-
-.form-box h2 {
-  margin-bottom: 25px;
-  font-size: 24px;
-}
-
-form label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-form input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-button {
-  width: 100%;
-  margin-top: 25px;
-  padding: 12px;
-  background-color: #000;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Rodapé */
-.footer {
+  max-width: 1200px; /* Largura máxima do conteúdo */
+  background-color: #fff; /* Fundo branco para a área central */
+  border: 1px solid #EAEAEA;
   display: flex;
-  justify-content: space-around;
-  padding: 40px;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  font-size: 14px;
+  flex-direction: column;
+  min-height: 90vh; /* Altura mínima para ocupar a tela */
+  padding: 20px 40px;
 }
 
-.submit{
-  margin-top:20px;
-  border-radius:10px;
+a {
+  text-decoration: none;
+  color: #555;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #000;
+}
+
+
+/* --- CABEÇALHO --- */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  width: 100%;
+}
+
+/* --- CONTEÚDO PRINCIPAL (LOGIN) --- */
+.login-content {
+  flex-grow: 1; /* Faz esta área crescer para ocupar o espaço disponível */
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.illustration-side {
+  flex: 1; /* Ocupa 50% do espaço */
+  padding-right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustration-side img {
+  max-width: 100%;
+  height: auto;
+}
+
+.form-side {
+  flex: 1; /* Ocupa 50% do espaço */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 380px; /* Define uma largura máxima para o formulário */
+}
+
+.login-form-wrapper h2 {
+  font-size: 2.5rem; /* Tamanho do título "Login" */
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #DCDCDC;
+  border-radius: 8px; /* Bordas arredondadas */
+  font-size: 1rem;
+  background-color: #F9F9F9;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #A0A0A0;
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1C1C1C; /* Cor preta do botão */
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background-color: #333;
+}
+
+
+/* --- RODAPÉ --- */
+.main-footer {
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Espaço entre os links */
+  padding-top: 20px;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* --- AJUSTES PARA TELAS MENORES (RESPONSIVIDADE) --- */
+@media (max-width: 992px) {
+  .illustration-side {
+      display: none; /* Esconde a ilustração em telas menores */
+  }
+  
+  .form-side {
+      justify-content: center;
+      padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+      padding: 20px;
+      min-height: unset;
+  }
+
+  .main-header {
+      flex-direction: column;
+      gap: 15px;
+  }
+  
+  .login-form-wrapper h2 {
+      font-size: 2rem;
+      text-align: center;
+  }
+
+  .main-footer {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+  }
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.logo svg {
+  margin-right: 8px;
+  color: #444;
+}
+
+/* --- RODAPÉ --- */
+.main-footer {
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Espaço entre os links */
+  padding-top: 20px;
+  font-size: 0.8rem;
+  color: #777;
 }

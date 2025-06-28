@@ -1,68 +1,80 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registrar Usuario</title>
-  <link rel="stylesheet" href="cadastrousuario.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crie sua Conta - Mapa de Eventos de Joinville</title>
+    <link rel="stylesheet" href="../static/style.css" th:href="@{/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Cabeçalho -->
-  <header class="topbar">
-    <div class="logo"><strong>Mapa de Eventos de Joinville</strong></div>
-    <nav class="nav-links">
-      <a href="../paginainicial/paginainicial.html" class="topbar2">Home</a>
-    </nav>
-  </header>
+    <div class="page-container">
+        <header class="main-header">
+             <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                </svg>
+                <span>Mapa de Eventos de Joinville</span>
+            </div>
+            <nav>
+                <a href="/" th:href="@{/}">Home</a>
+            </nav>
+        </header>
 
-  <!-- Conteúdo principal -->
-  <main class="login-container">
-    <div class="illustration">
-      <img src="../static/fotos/imagem-login.png" />
-    </div>
+        <main class="login-content">
+            <div class="illustration-side">
+                <img src="../static/joinville.jpg" th:src="@{/joinville.jpg}" alt="Ilustração de pessoas representando a comunidade de eventos.">
+            </div>
 
-    <div class="form-box">
-      <h2>Cadastro</h2>
-      <form>
-        <label>Nome Completo</label>
-        <input type="nome" placeholder="Digite seu nome completo" required />
+            <div class="form-side">
+                <div class="login-form-wrapper">
+                    <h2>Crie sua conta</h2>
+                    
+                    <form th:action="@{/cadastro}" th:object="${usuarioDTO}" method="post">
+                        
+                        <div class="form-group">
+                            <label for="nomeCompleto">Nome Completo</label>
+                            <input type="text" th:field="*{nomeCompleto}">
+                            <span style="color:red; font-size: 0.8rem;" th:if="${#fields.hasErrors('nomeCompleto')}" th:errors="*{nomeCompleto}"></span>
+                        </div>
 
-        <label>Email</label>
-        <input type="email" id="email" placeholder="Digite seu email" required />
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" th:field="*{email}">
+                             <span style="color:red; font-size: 0.8rem;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
 
-        <label>Senha</label>
-        <input type="password" placeholder="********" required />
+                        <div class="form-group">
+                            <label for="senha">Senha</label>
+                            <input type="password" th:field="*{senha}">
+                             <span style="color:red; font-size: 0.8rem;" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></span>
+                        </div>
+                        
+                        <div class="form-group-checkbox">
+                           <input type="checkbox" th:field="*{termosAceitos}">
+                           <label for="termosAceitos">Eu concordo com os <a href="#">termos e condições</a></label>
+                           <br>
+                           <span style="color:red; font-size: 0.8rem;" th:if="${#fields.hasErrors('termosAceitos')}" th:errors="*{termosAceitos}"></span>
+                        </div>
+                        
+                        <button type="submit" class="login-button">Criar Conta</button>
+                    </form>
+
+                    <p class="redirect-link">
+                        Já possui uma conta? <a href="index.html" th:href="@{/login}">Faça login aqui</a>
+                    </p>
+                </div>
+            </div>
+        </main>
         
-        <button type="submit" class="submit">Cadastro</button>
-      </form>
+        <footer class="main-footer">
+            <a href="#">Privacidade</a>
+            <a href="#">Termos e condições</a>
+            <a href="#">Contato</a>
+        </footer>
     </div>
-  </main>
 
-  <!-- Rodapé -->
-  <footer class="footer">
-    <div>Privacidade</div>
-    <div>Termos e condições</div>
-    <div>Contato</div>
-  </footer>
-
-  <script>
-  $(document).ready(function () {
-    $('form').on('submit', function (e) {
-      const email = $('#email').val();
-
-      // Verifica se contém "@" e "."
-      if (!email.includes('@') || !email.includes('.')) {
-        alert('Por favor, insira um e-mail válido com @ e domínio.');
-        e.preventDefault(); // Impede o envio do formulário
-      }
-    });
-  });
-</script>
 </body>
 </html>
