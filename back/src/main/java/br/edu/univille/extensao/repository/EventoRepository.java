@@ -19,5 +19,5 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
     Page<Evento> findByCidadeContainingAndCategoriaContainingAndData(
         String cidade, String categoria, LocalDate data, Pageable pageable
     );
-    Page<Evento> findByData(LocalDate localDate);
+    Page<Evento> findByData(LocalDate localDate, Pageable pageable);
 }
