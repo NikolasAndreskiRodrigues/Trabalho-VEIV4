@@ -1,9 +1,13 @@
 package br.edu.univille.extensao.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.univille.extensao.entity.Empresa;
 import br.edu.univille.extensao.repository.EmpresaRepository;
@@ -59,5 +65,38 @@ public class EmpresaController {
     @GetMapping("/home")
     public Empresa home() {
         return new Empresa();
+    }
+
+    @PutMapping("/{id}/perfil")
+    public Empresa atualizarPerfil(@PathVariable Long id, @RequestBody Empresa empresaAtualizada) {
+        Empresa empresa = empresaRepository.findById(id).orElseThrow();
+        empresa.setNome(empresaAtualizada.getNome());
+        empresa.setEmail(empresaAtualizada.getEmail());
+        empresa.setCnpj(empresaAtualizada.getCnpj());
+        empresa.setTelefone(empresaAtualizada.getTelefone());
+        empresa.setDescricao(empresaAtualizada.getDescricao());
+        empresa.setEndereco(empresaAtualizada.getEndereco());
+        empresa.setFotoLogo(empresaAtualizada.getFotoLogo());
+        empresa.setSenha(empresaAtualizada.getSenha());
+        return empresaRepository.save(empresa);
+    }
+
+    @PostMapping("/{id}/upload-foto")
+    public ResponseEntity<?> uploadFotoLogo(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            String pasta = "uploads/empresas/";
+            Files.createDirectories(Paths.get(pasta));
+            String nomeArquivo = id + "_" + file.getOriginalFilename();
+            Path caminho = Paths.get(pasta + nomeArquivo);
+            Files.write(caminho, file.getBytes());
+
+            Empresa empresa = empresaRepository.findById(id).orElseThrow();
+            empresa.setFotoLogo("/" + pasta + nomeArquivo);
+            empresaRepository.save(empresa);
+
+            return ResponseEntity.ok().body("Foto enviada com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao fazer upload");
+        }
     }
 }

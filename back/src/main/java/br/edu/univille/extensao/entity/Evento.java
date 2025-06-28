@@ -1,5 +1,6 @@
 package br.edu.univille.extensao.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,11 @@ public class Evento {
     private LocalDateTime dataFim;
     private Integer capacidade;
     private String organizacao;
-
+    private String cidade;
+    private String categoria;
+    private boolean destaque;
+    private String foto; 
+    private LocalDate data; 
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;

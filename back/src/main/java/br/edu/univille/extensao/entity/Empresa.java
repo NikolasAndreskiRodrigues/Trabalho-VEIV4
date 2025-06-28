@@ -19,4 +19,6 @@ public class Empresa {
     private String telefone;
     private String descricao;
     private String senha;   
+    private String endereco;
+    private String fotoLogo; // Caminho da imagem/logo da empresa
 }

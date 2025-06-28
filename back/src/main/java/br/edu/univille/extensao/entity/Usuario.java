@@ -1,8 +1,15 @@
 package br.edu.univille.extensao.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import lombok.Data;
 
 @Data
 @Entity
@@ -15,6 +22,7 @@ public class Usuario {
     private String email;
     private String username;
     private String senha;
+    private String fotoPerfil; 
 
     @ManyToMany
     @JoinTable(

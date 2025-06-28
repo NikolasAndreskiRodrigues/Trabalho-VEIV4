@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.ResponseEntity;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import br.edu.univille.extensao.entity.Evento;
 import br.edu.univille.extensao.repository.EventoRepository;
@@ -54,16 +59,22 @@ public class EventoController {
         return eventoRepository.findByData(LocalDate.parse(data));
     }
 
-    @GetMapping
+    @GetMapping("/filtrar")
     public Page<Evento> filtrar(
         @RequestParam(required = false, defaultValue = "") String cidade,
         @RequestParam(required = false, defaultValue = "") String categoria,
         @RequestParam(required = false) LocalDate data,
         Pageable pageable
     ) {
-        return eventoRepository.findByCidadeContainingAndCategoriaContainingAndData(
-            cidade, categoria, data, pageable
-        );
+        if (data != null) {
+            return eventoRepository.findByCidadeContainingAndCategoriaContainingAndData(
+                cidade, categoria, data, pageable
+            );
+        } else {
+            return eventoRepository.findByCidadeContainingAndCategoriaContaining(
+                cidade, categoria, pageable
+            );
+        }
     }
 
     @GetMapping("/{id}")
@@ -99,6 +110,25 @@ public class EventoController {
     public Page<Evento> calendarioEmpresa(@PathVariable Long id, Pageable pageable) {
         // Implemente busca por eventos da empresa
         return Page.empty();
+    }
+
+    @PostMapping("/{id}/upload-foto")
+    public ResponseEntity<?> uploadFotoEvento(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            String pasta = "uploads/eventos/";
+            Files.createDirectories(Paths.get(pasta));
+            String nomeArquivo = id + "_" + file.getOriginalFilename();
+            Path caminho = Paths.get(pasta + nomeArquivo);
+            Files.write(caminho, file.getBytes());
+
+            Evento evento = eventoRepository.findById(id).orElseThrow();
+            evento.setFoto("/" + pasta + nomeArquivo);
+            eventoRepository.save(evento);
+
+            return ResponseEntity.ok().body("Foto enviada com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao fazer upload");
+        }
     }
 
 }
