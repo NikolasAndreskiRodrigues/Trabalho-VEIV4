@@ -13,7 +13,6 @@
   <div class="container">
     <div class="sidebar">
       <a th:href="@{/paginainicial}"><i class="fas fa-home"></i></a>
-      <a th:href="@{/homeeventos}"><i class="fas fa-search"></i></a>
       <a th:href="@{/calendario}"><i class="fas fa-calendar"></i></a>
       <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
       <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
@@ -38,16 +37,16 @@
           <button type="button" onclick="document.getElementById('imagemInput').click()">Carregar Imagem</button>
         </div>
 
-        <form class="profile-form">
+        <form class="profile-form" id="formPerfil">
           <h4>Contato de Informação</h4>
           <label>Nome Completo *</label>
-          <input type="text" placeholder="Seu nome completo" required />
+          <input type="text" id="nome" placeholder="Seu nome completo" required />
 
           <label>Alterar Email</label>
-          <input type="text" placeholder="Email de contato" required />
+          <input type="email" id="email" placeholder="Email de contato" required />
 
           <label>Alterar Senha</label>
-          <input type="password" placeholder="********" required />
+          <input type="password" id="senha" placeholder="********" required />
 
           <div class="buttons">
             <button type="button" class="cancel">Descartar</button>
@@ -68,6 +67,45 @@
         };
         reader.readAsDataURL(file);
       }
+    });
+
+    // Supondo que o ID do usuário esteja salvo no localStorage
+    const usuarioId = localStorage.getItem('usuarioId');
+
+    // Carregar dados do usuário (opcional)
+    $(document).ready(function () {
+      if (usuarioId) {
+        $.get(`/api/usuarios/${usuarioId}`, function (usuario) {
+          $('#nome').val(usuario.nome);
+          $('#email').val(usuario.email);
+          // Não preencha senha por segurança
+          if (usuario.fotoPerfil) {
+            $('#preview').attr('src', usuario.fotoPerfil);
+          }
+        });
+      }
+    });
+
+    // Atualizar perfil
+    $('#formPerfil').on('submit', function (e) {
+      e.preventDefault();
+      const nome = $('#nome').val();
+      const email = $('#email').val();
+      const senha = $('#senha').val();
+
+      $.ajax({
+        url: `/api/usuarios/${usuarioId}/perfil`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({ nome, email, senha }),
+        success: function () {
+          alert('Perfil atualizado com sucesso!');
+          window.location.reload();
+        },
+        error: function (xhr) {
+          alert('Erro ao atualizar: ' + (xhr.responseText || 'Tente novamente.'));
+        }
+      });
     });
   </script>
 </body>

@@ -22,17 +22,17 @@
   <!-- Conteúdo principal -->
   <main class="login-container">
     <div class="illustration">
-      <img src="../static/fotos/imagem-login.png" />
+      <img src="/fotos/imagem-login.png" />
     </div>
 
     <div class="form-box">
       <h2>Login</h2>
-      <form>
+      <form id="loginForm">
         <label>Email</label>
-        <input type="email" placeholder="email@exemplo.com" required />
+        <input type="email" id="email" placeholder="email@exemplo.com" required />
 
         <label>Senha</label>
-        <input type="password" placeholder="********" required />
+        <input type="password" id="senha" placeholder="********" required />
         
         <button type="submit" class="submit">Login</button>
       </form>
@@ -46,5 +46,32 @@
     <div>Contato</div>
   </footer>
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $('#loginForm').on('submit', function(e) {
+      e.preventDefault();
+      const email = $('#email').val();
+      const senha = $('#senha').val();
+
+      $.ajax({
+        url: '/api/usuarios/login',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email, senha }),
+        success: function(usuario) {
+          if (usuario && usuario.id) {
+            localStorage.setItem('usuarioId', usuario.id); // Salva o ID para uso futuro
+            alert('Login realizado com sucesso!');
+            window.location.href = '/paginainicial'; // Redireciona para o perfil ou outra página
+          } else {
+            alert('Usuário ou senha inválidos!');
+          }
+        },
+        error: function() {
+          alert('Usuário ou senha inválidos!');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

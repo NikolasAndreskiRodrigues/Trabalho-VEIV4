@@ -19,7 +19,6 @@
 
     <div class="sidebar">
       <a th:href="@{/paginainicial}"><i class="fas fa-home"></i></a>
-      <a th:href="@{/homeeventos}"><i class="fas fa-search"></i></a>
       <a th:href="@{/calendario}"><i class="fas fa-calendar"></i></a>
       <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
       <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
@@ -32,6 +31,7 @@
       <div class="logo">📍 <strong>Mapa de Eventos de Joinville</strong></div>
       <nav class="nav-links">
         <a th:href="@{/cadastrousuario}" class="topbar2">Crie sua conta</a>
+        <a th:href="@{/loginusuario}" class="topbar2">Login</a>
         <a th:href="@{/cadastroempresa}" class="topbar2">Cadastre sua empresa</a>
         <a th:href="@{/calendario}" class="topbar2">Procurar Eventos</a>
       </nav>
@@ -49,17 +49,7 @@
 
     <section class="eventos-futuros">
       <h2>Futuros Eventos</h2>
-      <div class="cards">
-        <div class="card">
-          <img th:src="@{/fotos/SummitIA2025.jpeg}" alt="Evento 1" />
-        </div>
-        <div class="card">
-          <img th:src="@{/fotos/Codecon.png}" alt="Evento 2" />
-        </div>
-        <div class="card">
-          <img th:src="@{/fotos/TDC Floripa.jpeg}" alt="Evento 3" />
-        </div>
-      </div>
+      <div class="cards" id="eventCards"></div>
     </section>
 
     <section class="instrucoes">
@@ -90,6 +80,72 @@
       .addTo(map)
       .bindPopup('<b>Centro de Joinville</b><br>Evento Principal')
       .openPopup();
+
+    const marcadoresEventos = [];
+    let eventosOrdenados = [];
+
+    // Adiciona marcadores para todos os eventos do banco
+    fetch('/api/eventos')
+      .then(res => res.json())
+      .then(eventos => {
+        // Ordena por data de início (mais próximos primeiro)
+        eventosOrdenados = eventos
+          .filter(ev => ev.dataInicio)
+          .sort((a, b) => new Date(a.dataInicio) - new Date(b.dataInicio));
+
+        eventos.forEach(ev => {
+          if (ev.latitude && ev.longitude) {
+            // Calcula duração
+            let duracao = '';
+            if (ev.dataInicio && ev.dataFim) {
+              const inicio = new Date(ev.dataInicio);
+              const fim = new Date(ev.dataFim);
+              const diffMs = fim - inicio;
+              const diffMin = Math.floor(diffMs / 60000);
+              const horas = Math.floor(diffMin / 60);
+              const minutos = diffMin % 60;
+              duracao = `${horas}h ${minutos}min`;
+            }
+            // Formata datas
+            const dataInicio = ev.dataInicio ? new Date(ev.dataInicio).toLocaleString('pt-BR') : '';
+            const dataFim = ev.dataFim ? new Date(ev.dataFim).toLocaleString('pt-BR') : '';
+            // Monta popup
+            const marker = L.marker([ev.latitude, ev.longitude])
+              .addTo(map)
+              .bindPopup(
+                `<b>${ev.nome}</b><br>
+                ${ev.descricao || ''}<br>
+                <b>Início:</b> ${dataInicio}<br>
+                <b>Término:</b> ${dataFim}<br>
+                <b>Duração:</b> ${duracao}<br>
+                <b>Acesso:</b> ${ev.acesso || 'Não informado'}<br>
+                <b>Endereço:</b> ${ev.endereco || ''}<br>
+                <button onclick="window.location.href='/conferencia?id=${ev.id}'" class="btn btn-primary btn-sm mt-2">Ver Detalhes</button>`
+              );
+            marcadoresEventos.push({ id: ev.id, marker });
+          }
+        });
+
+        // Preenche os cards dos próximos 3 eventos
+        const cardsDiv = document.getElementById('eventCards');
+        cardsDiv.innerHTML = '';
+        eventosOrdenados.slice(0, 3).forEach(ev => {
+          const imgSrc = ev.foto ? ev.foto : 'https://placehold.co/300x220?text=Evento';
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.cursor = 'pointer';
+          card.innerHTML = `<img src="${imgSrc}" alt="${ev.nome}" title="${ev.nome}"/>`;
+          card.onclick = function () {
+            // Seleciona o marcador correspondente e centraliza/abre popup
+            const marcadorObj = marcadoresEventos.find(m => m.id === ev.id);
+            if (marcadorObj) {
+              map.setView(marcadorObj.marker.getLatLng(), 16);
+              marcadorObj.marker.openPopup();
+            }
+          };
+          cardsDiv.appendChild(card);
+        });
+      });
 
     // Clique no botão "Procurar Eventos"
     document.getElementById("procurarEventos").addEventListener("click", function (e) {

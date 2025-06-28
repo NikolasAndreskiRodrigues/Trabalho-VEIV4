@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -28,13 +29,17 @@ public class Evento {
     private Integer capacidade;
     private String organizacao;
     private String cidade;
-    private String categoria;
-    private boolean destaque;
     private String foto; 
-    private LocalDate data; 
+    private String acesso;
+    private Double latitude;
+    private Double longitude;
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
+
+    // Adicione este campo auxiliar (não persistente) para receber o ID no JSON:
+    @Transient
+    private Long empresaId;
 
     @ManyToMany(mappedBy = "eventosParticipando")
     private List<Usuario> participantes;

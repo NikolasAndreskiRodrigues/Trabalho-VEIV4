@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.univille.extensao.entity.Evento;
 import br.edu.univille.extensao.repository.EventoRepository;
+import br.edu.univille.extensao.repository.EmpresaRepository;
+import br.edu.univille.extensao.entity.Empresa;
 
 @RestController
 @RequestMapping("/api/eventos")
@@ -25,8 +27,15 @@ public class EventoController {
     @Autowired
     private EventoRepository eventoRepository;
 
+    @Autowired
+    private EmpresaRepository empresaRepository;
+
     @PostMapping
     public Evento criar(@RequestBody Evento evento) {
+        if (evento.getEmpresaId() != null) {
+            Empresa empresa = empresaRepository.findById(evento.getEmpresaId()).orElse(null);
+            evento.setEmpresa(empresa);
+        }
         return eventoRepository.save(evento);
     }
 
@@ -35,42 +44,9 @@ public class EventoController {
         return eventoRepository.findAll();
     }
 
-    @GetMapping("/destaques")
-    public Page<Evento> destaques(Pageable pageable) {
-        return eventoRepository.findByDestaqueTrue(pageable);
-    }
-
-    @GetMapping("/recentes")
-    public Page<Evento> recentes(Pageable pageable) {
-        return eventoRepository.findByOrderByDataDesc(pageable);
-    }
-
-    @GetMapping("/por-data")
-    public Page<Evento> buscarPorData(@RequestParam String data, Pageable pageable) {
-        return eventoRepository.findByData(LocalDate.parse(data), pageable);
-    }
-
-    @GetMapping("/filtrar")
-    public Page<Evento> filtrar(
-        @RequestParam(required = false, defaultValue = "") String cidade,
-        @RequestParam(required = false, defaultValue = "") String categoria,
-        @RequestParam(required = false) LocalDate data,
-        Pageable pageable
-    ) {
-        if (data != null) {
-            return eventoRepository.findByCidadeContainingAndCategoriaContainingAndData(
-                cidade, categoria, data, pageable
-            );
-        } else {
-            return eventoRepository.findByCidadeContainingAndCategoriaContaining(
-                cidade, categoria, pageable
-            );
-        }
-    }
-
     @GetMapping("/{id}")
-    public Optional<Evento> getEvento(@PathVariable Long id) {
-        return eventoRepository.findById(id);
+    public Evento getEvento(@PathVariable Long id) {
+        return eventoRepository.findById(id).orElse(null);
     }
 
     @PutMapping("/{id}")
@@ -99,7 +75,7 @@ public class EventoController {
     @PostMapping("/{id}/upload-foto")
     public ResponseEntity<?> uploadFotoEvento(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            String pasta = "uploads/eventos/";
+            String pasta = "back/fotos/";
             Files.createDirectories(Paths.get(pasta));
 
             String nomeArquivo = id + "_" + file.getOriginalFilename();
@@ -109,7 +85,7 @@ public class EventoController {
             Evento evento = eventoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
 
-            evento.setFoto("/" + pasta + nomeArquivo);
+            evento.setFoto("/fotos/" + nomeArquivo); // Caminho para acessar via URL
             eventoRepository.save(evento);
 
             return ResponseEntity.ok().body("Foto enviada com sucesso!");

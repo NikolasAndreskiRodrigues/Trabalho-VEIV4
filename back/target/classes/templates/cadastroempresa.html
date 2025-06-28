@@ -84,6 +84,31 @@
         script.src = `https://www.receitaws.com.br/v1/cnpj/${cnpj}?callback=preencherCampos`;
         document.body.appendChild(script);
       });
+
+      // Cadastro da empresa
+      $('#formEmpresa').on('submit', function (e) {
+        e.preventDefault();
+        const nome = $('#nomeEmpresa').val();
+        const cnpj = $('#cnpj').val();
+        const email = $('#email').val();
+        const telefone = $('#telefone').val();
+        const descricao = $('textarea').val();
+        // Adicione outros campos se necessário
+
+        $.ajax({
+          url: '/api/empresas',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ nome, cnpj, email, telefone, descricao }),
+          success: function () {
+            alert('Empresa cadastrada com sucesso!');
+            window.location.href = '/loginusuario'; // Redirecione para onde desejar
+          },
+          error: function (xhr) {
+            alert('Erro ao cadastrar: ' + (xhr.responseText || 'Tente novamente.'));
+          }
+        });
+      });
     });
 
     function preencherCampos(data) {
