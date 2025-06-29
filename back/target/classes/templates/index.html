@@ -23,7 +23,6 @@
       <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
       <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
       <a th:href="@{/perfilempresarial}"><i class="fa fa-building"></i></a>
-      <a th:href="@{/}"><i class="fas fa-sign-out-alt"></i></a>
     </div>
 
   <div class="container">
@@ -69,6 +68,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    localStorage.clear(); 
 
     // Inicialização do mapa
     const map = L.map('map').setView([-26.3045, -48.8487], 13);

@@ -105,7 +105,7 @@ public class UsuarioController {
     @PostMapping("/{id}/upload-foto")
 public ResponseEntity<?> uploadFotoPerfil(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
     try {
-        String pasta = "uploads/usuarios/";
+        String pasta = "fotos/user/";
         Files.createDirectories(Paths.get(pasta));
         String nomeArquivo = id + "_" + file.getOriginalFilename();
         Path caminho = Paths.get(pasta + nomeArquivo);

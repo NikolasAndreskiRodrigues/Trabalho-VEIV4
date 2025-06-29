@@ -36,6 +36,10 @@
         
         <button type="submit" class="submit">Login</button>
       </form>
+      <div style="margin-top: 15px; text-align: center;">
+        <span>Não tem uma conta?</span>
+        <a href="/cadastrousuario" style="margin-left: 5px;">Crie sua conta</a>
+      </div>
     </div>
   </main>
 
@@ -60,9 +64,9 @@
         data: JSON.stringify({ email, senha }),
         success: function(usuario) {
           if (usuario && usuario.id) {
-            localStorage.setItem('usuarioId', usuario.id); // Salva o ID para uso futuro
+            localStorage.setItem('usuarioId', usuario.id); // <- ESSA LINHA É FUNDAMENTAL
             alert('Login realizado com sucesso!');
-            window.location.href = '/paginainicial'; // Redireciona para o perfil ou outra página
+            window.location.href = '/paginainicial';
           } else {
             alert('Usuário ou senha inválidos!');
           }

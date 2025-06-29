@@ -17,7 +17,7 @@
       <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
       <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
       <a th:href="@{/perfilempresarial}"><i class="fa fa-building"></i></a>
-      <a th:href="@{/paginainicial}"><i class="fas fa-sign-out-alt"></i></a>
+      <a th:href="@{/}"><i class="fas fa-sign-out-alt"></i></a>
     </div>
 
     <main class="main-content">
@@ -39,7 +39,7 @@
 
         <form class="profile-form" id="formPerfil">
           <h4>Contato de Informação</h4>
-          <label>Nome Completo *</label>
+          <label>Nome Completo</label>
           <input type="text" id="nome" placeholder="Seu nome completo" required />
 
           <label>Alterar Email</label>
@@ -51,62 +51,111 @@
           <div class="buttons">
             <button type="button" class="cancel">Descartar</button>
             <button type="submit" class="apply">Aplicar</button>
-            <button type="button" class="update">Atualizar</button>
           </div>
         </form>
       </div>
     </main>
   </div>
-  <script>
-    document.getElementById('imagemInput').addEventListener('change', function (event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById('preview').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  const usuarioId = localStorage.getItem('usuarioId');
+  if (!usuarioId) {
+    window.location.href = '/loginusuario';
+  }
 
-    // Supondo que o ID do usuário esteja salvo no localStorage
-    const usuarioId = localStorage.getItem('usuarioId');
+  document.getElementById('imagemInput').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('preview').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
-    // Carregar dados do usuário (opcional)
-    $(document).ready(function () {
-      if (usuarioId) {
-        $.get(`/api/usuarios/${usuarioId}`, function (usuario) {
-          $('#nome').val(usuario.nome);
-          $('#email').val(usuario.email);
-          // Não preencha senha por segurança
-          if (usuario.fotoPerfil) {
-            $('#preview').attr('src', usuario.fotoPerfil);
-          }
-        });
-      }
-    });
-
-    // Atualizar perfil
-    $('#formPerfil').on('submit', function (e) {
-      e.preventDefault();
-      const nome = $('#nome').val();
-      const email = $('#email').val();
-      const senha = $('#senha').val();
-
-      $.ajax({
-        url: `/api/usuarios/${usuarioId}/perfil`,
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify({ nome, email, senha }),
-        success: function () {
-          alert('Perfil atualizado com sucesso!');
-          window.location.reload();
-        },
-        error: function (xhr) {
-          alert('Erro ao atualizar: ' + (xhr.responseText || 'Tente novamente.'));
+  $(document).ready(function () {
+    if (usuarioId) {
+      $.get(`/api/usuarios/${usuarioId}`, function (usuario) {
+        $('#nome').val(usuario.nome);
+        $('#email').val(usuario.email);
+        if (usuario.fotoPerfil && usuario.fotoPerfil.trim() !== "") {
+          $('#preview').attr('src', usuario.fotoPerfil);
+        } else {
+          $('#preview').attr('src', 'https://placehold.co/120x120');
         }
       });
+    }
+  });
+
+  $('#formPerfil').on('submit', function (e) {
+    e.preventDefault();
+    const nome = $('#nome').val();
+    const email = $('#email').val();
+    const senha = $('#senha').val();
+
+    $.ajax({
+      url: `/api/usuarios/${usuarioId}/perfil`,
+      method: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify({ nome, email, senha }),
+      success: function () {
+        // Após atualizar dados, envie a foto se houver
+        const file = $('#imagemInput')[0].files[0];
+        if (file) {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          $.ajax({
+            url: `/api/usuarios/${usuarioId}/upload-foto`,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+              alert('Perfil atualizado com sucesso!');
+              window.location.reload();
+            },
+            error: function () {
+              alert('Perfil atualizado, mas erro ao enviar foto.');
+              window.location.reload();
+            }
+          });
+        } else {
+          alert('Perfil atualizado com sucesso!');
+          window.location.reload();
+        }
+      },
+      error: function (xhr) {
+        alert('Erro ao atualizar: ' + (xhr.responseText || 'Tente novamente.'));
+      }
     });
-  </script>
+  });
+
+  function login() {
+    const email = $('#email').val();
+    const senha = $('#senha').val();
+
+    $.ajax({
+      url: '/api/usuarios/login',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ email, senha }),
+      success: function(usuario) {
+        if (usuario && usuario.id) {
+          localStorage.setItem('usuarioId', usuario.id);
+          alert('Login realizado com sucesso!');
+          window.location.href = '/paginainicial';
+        } else {
+          alert('Usuário ou senha inválidos!');
+        }
+      },
+      error: function() {
+        alert('Usuário ou senha inválidos!');
+      }
+    });
+  }
+</script>
 </body>
 </html>

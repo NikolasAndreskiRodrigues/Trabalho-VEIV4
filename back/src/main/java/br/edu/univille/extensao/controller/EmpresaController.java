@@ -36,11 +36,6 @@ public class EmpresaController {
         return empresaRepository.save(empresa);
     }
 
-    @PostMapping("/login")
-    public Empresa login(@RequestBody Empresa login) {
-        return empresaRepository.findByEmailAndSenha(login.getEmail(), login.getSenha()).orElse(null);
-    }
-
     @GetMapping
     public List<Empresa> listar() {
         return empresaRepository.findAll();
@@ -77,14 +72,15 @@ public class EmpresaController {
         empresa.setDescricao(empresaAtualizada.getDescricao());
         empresa.setEndereco(empresaAtualizada.getEndereco());
         empresa.setFotoLogo(empresaAtualizada.getFotoLogo());
-        empresa.setSenha(empresaAtualizada.getSenha());
+        empresa.setLatitude(empresaAtualizada.getLatitude());
+        empresa.setLongitude(empresaAtualizada.getLongitude());
         return empresaRepository.save(empresa);
     }
 
     @PostMapping("/{id}/upload-foto")
     public ResponseEntity<?> uploadFotoLogo(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            String pasta = "uploads/empresas/";
+            String pasta = "fotos/empresas/";
             Files.createDirectories(Paths.get(pasta));
             String nomeArquivo = id + "_" + file.getOriginalFilename();
             Path caminho = Paths.get(pasta + nomeArquivo);

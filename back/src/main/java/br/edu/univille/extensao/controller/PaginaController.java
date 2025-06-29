@@ -8,7 +8,7 @@ public class PaginaController {
 
     @GetMapping("/")
     public String raiz() {
-        return "paginainicial"; // templates/paginainicial.html
+        return "index"; // templates/index.html
     }   
 
     @GetMapping("/paginainicial")
@@ -18,7 +18,7 @@ public class PaginaController {
 
     @GetMapping("/logout")
     public String logout() {
-        return "paginainicial"; // templates/paginainicial.html
+        return "index"; // templates/index.html
     }
 
     @GetMapping("/homeeventos")

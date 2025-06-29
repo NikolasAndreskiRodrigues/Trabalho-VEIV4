@@ -170,3 +170,12 @@ button {
   border: 1px solid #333;
   background-color: white;
 }
+
+#map {
+  height: 300px !important;
+  width: 100% !important;
+  min-height: 300px;
+  min-width: 100%;
+  position: relative;
+  z-index: 1;
+}

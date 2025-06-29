@@ -23,7 +23,7 @@
       <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
       <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
       <a th:href="@{/perfilempresarial}"><i class="fa fa-building"></i></a>
-      <a th:href="@{/paginainicial}"><i class="fas fa-sign-out-alt"></i></a>
+      <a th:href="@{/}"><i class="fas fa-sign-out-alt"></i></a>
     </div>
 
   <div class="container">
@@ -69,6 +69,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+
     // Inicialização do mapa
     const map = L.map('map').setView([-26.3045, -48.8487], 13);
 
@@ -144,6 +145,34 @@
             }
           };
           cardsDiv.appendChild(card);
+        });
+      });
+
+    // Adiciona marcadores vermelhos para as empresas
+    fetch('/api/empresas')
+      .then(res => res.json())
+      .then(empresas => {
+        empresas.forEach(emp => {
+          if (emp.latitude && emp.longitude) {
+            // Ícone vermelho do Leaflet padrão
+            const redIcon = new L.Icon({
+              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+              shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            });
+
+            L.marker([emp.latitude, emp.longitude], { icon: redIcon })
+              .addTo(map)
+              .bindPopup(
+                `<b>${emp.nome}</b><br>
+                ${emp.endereco || ''}<br>
+                <b>Email:</b> ${emp.email || ''}<br>
+                <b>Telefone:</b> ${emp.telefone || ''}`
+              );
+          }
         });
       });
 

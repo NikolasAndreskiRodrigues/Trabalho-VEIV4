@@ -17,8 +17,9 @@ public class Empresa {
     private String cnpj;
     private String email;
     private String telefone;
-    private String descricao;
-    private String senha;   
+    private String descricao;   
     private String endereco;
     private String fotoLogo; // Caminho da imagem/logo da empresa
+    private Double latitude;
+    private Double longitude;
 }
