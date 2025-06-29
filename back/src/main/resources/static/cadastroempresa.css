@@ -128,9 +128,17 @@ button {
   display: block;
 }
 
-/* Garante que o mapa não fique sobreposto por outros elementos */
-.leaflet-container {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 10px;
-}
+  #map {
+    height: 300px !important;
+    width: 100% !important;
+    min-height: 300px;
+    min-width: 100%;
+    margin-bottom: 20px;
+    z-index: 1;
+  }
+  .leaflet-container {
+    height: 300px !important;
+    width: 100% !important;
+    min-height: 300px;
+    min-width: 100%;
+  }

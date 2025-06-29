@@ -35,6 +35,13 @@
             <label>Nome da Empresa</label>
             <input type="text" id="nomeEmpresa" placeholder="Ex: Tech Solutions" required />
           </div>
+
+          <div class="field">
+          <label>Logo da Empresa</label>
+          <img id="preview" src="https://placehold.co/120x120" style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px;" />
+          <input type="file" id="imagemInput" accept="image/*" />
+        </div>
+
           <div class="field">
             <label>Número de Registro - CNPJ</label>
             <input type="text" id="cnpj" placeholder="00.000.000/0000-00" required />
@@ -55,14 +62,15 @@
         <div class="field">
           <label>Endereço da Empresa</label>
           <input type="text" id="enderecoEmpresa" placeholder="Endereço da empresa" required />
+          <div id="map" style="height: 300px; width: 100%; margin-bottom: 20px;"></div>
         </div>
-
-        <div id="map" style="height: 300px; width: 100%; margin-bottom: 20px;"></div>
 
         <div class="field">
           <label>Descrição da Empresa</label>
           <textarea placeholder="Fale um pouco sobre sua empresa..." rows="4"></textarea>
         </div>
+
+        
 
         <button type="submit">Completar Registro</button>
       </form>
@@ -103,16 +111,38 @@
         const telefone = $('#telefone').val();
         const descricao = $('textarea').val();
         const endereco = $('#enderecoEmpresa').val();
-        // Adicione outros campos se necessário
 
         $.ajax({
           url: '/api/empresas',
           method: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({ nome, cnpj, email, telefone, descricao, endereco, latitude: latSelecionada, longitude: lonSelecionada }),
-          success: function () {
-            alert('Empresa cadastrada com sucesso!');
-            window.location.href = '/'; // Redirecione para onde desejar
+          success: function (empresa) {
+            // empresa deve ser o objeto retornado com o id
+            const file = $('#imagemInput')[0] && $('#imagemInput')[0].files[0];
+            if (file && empresa && empresa.id) {
+              const formData = new FormData();
+              formData.append('file', file);
+
+              $.ajax({
+                url: '/api/empresas/' + empresa.id + '/upload-foto',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                  alert('Empresa cadastrada com sucesso!');
+                  window.location.href = '/';
+                },
+                error: function () {
+                  alert('Empresa cadastrada, mas erro ao enviar logo.');
+                  window.location.href = '/';
+                }
+              });
+            } else {
+              alert('Empresa cadastrada com sucesso!');
+              window.location.href = '/';
+            }
           },
           error: function (xhr) {
             alert('Erro ao cadastrar: ' + (xhr.responseText || 'Tente novamente.'));
@@ -186,6 +216,17 @@
             marcador = L.marker([lat, lon]).addTo(map);
           }
         });
+    });
+
+    document.getElementById('imagemInput').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
     });
   </script>
 

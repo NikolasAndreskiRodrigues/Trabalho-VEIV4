@@ -105,14 +105,14 @@ public class UsuarioController {
     @PostMapping("/{id}/upload-foto")
 public ResponseEntity<?> uploadFotoPerfil(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
     try {
-        String pasta = "fotos/user/";
+        String pasta = "back/src/main/resources/static/foto/user/";
         Files.createDirectories(Paths.get(pasta));
         String nomeArquivo = id + "_" + file.getOriginalFilename();
         Path caminho = Paths.get(pasta + nomeArquivo);
         Files.write(caminho, file.getBytes());
 
         Usuario usuario = usuarioRepository.findById(id).orElseThrow();
-        usuario.setFotoPerfil("/" + pasta + nomeArquivo);
+        usuario.setFotoPerfil("/foto/user/" + nomeArquivo);
         usuarioRepository.save(usuario);
 
         return ResponseEntity.ok().body("Foto enviada com sucesso!");

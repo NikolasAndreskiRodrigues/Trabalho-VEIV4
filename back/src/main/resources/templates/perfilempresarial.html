@@ -149,7 +149,7 @@
           document.getElementById('telefoneEmpresa').value = empresa.telefone || '';
 
           const preview = document.getElementById('preview');
-          preview.src = empresa.fotoLogo ? `/fotos/${empresa.fotoLogo}` : 'https://placehold.co/120x120';
+          preview.src = empresa.fotoLogo ? empresa.fotoLogo : 'https://placehold.co/120x120';
 
           if (empresa.latitude && empresa.longitude) {
             latSelecionada = empresa.latitude;

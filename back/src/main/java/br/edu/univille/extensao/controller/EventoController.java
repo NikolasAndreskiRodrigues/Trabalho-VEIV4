@@ -75,7 +75,7 @@ public class EventoController {
     @PostMapping("/{id}/upload-foto")
     public ResponseEntity<?> uploadFotoEvento(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            String pasta = "back/fotos/";
+            String pasta = "back/src/main/resources/static/foto/evento/";
             Files.createDirectories(Paths.get(pasta));
 
             String nomeArquivo = id + "_" + file.getOriginalFilename();
@@ -85,7 +85,7 @@ public class EventoController {
             Evento evento = eventoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
 
-            evento.setFoto("/fotos/" + nomeArquivo); // Caminho para acessar via URL
+            evento.setFoto("/foto/evento/" + nomeArquivo); // Caminho para acessar via URL
             eventoRepository.save(evento);
 
             return ResponseEntity.ok().body("Foto enviada com sucesso!");

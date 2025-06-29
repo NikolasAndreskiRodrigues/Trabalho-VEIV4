@@ -80,14 +80,14 @@ public class EmpresaController {
     @PostMapping("/{id}/upload-foto")
     public ResponseEntity<?> uploadFotoLogo(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            String pasta = "fotos/empresas/";
+            String pasta = "back/src/main/resources/static/foto/empresa/";
             Files.createDirectories(Paths.get(pasta));
             String nomeArquivo = id + "_" + file.getOriginalFilename();
             Path caminho = Paths.get(pasta + nomeArquivo);
             Files.write(caminho, file.getBytes());
 
             Empresa empresa = empresaRepository.findById(id).orElseThrow();
-            empresa.setFotoLogo("/" + pasta + nomeArquivo);
+            empresa.setFotoLogo("/foto/empresa/" + nomeArquivo);
             empresaRepository.save(empresa);
 
             return ResponseEntity.ok().body("Foto enviada com sucesso!");
