@@ -17,14 +17,14 @@
 </head>
 <body>
 
-    <div class="sidebar">
-      <a th:href="@{/paginainicial}"><i class="fas fa-home"></i></a>
-      <a th:href="@{/calendario}"><i class="fas fa-calendar"></i></a>
-      <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
-      <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
-      <a th:href="@{/perfilempresarial}"><i class="fa fa-building"></i></a>
-      <a th:href="@{/}"><i class="fas fa-sign-out-alt"></i></a>
-    </div>
+  <div class="sidebar">
+    <a th:href="@{/paginainicial}"><i class="fas fa-home"></i></a>
+    <a th:href="@{/calendario}"><i class="fas fa-calendar"></i></a>
+    <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
+    <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
+    <a th:href="@{/perfilempresarial}"><i class="fa fa-building"></i></a>
+    <a th:href="@{/}"><i class="fas fa-sign-out-alt"></i></a>
+  </div>
 
   <div class="container">
     <header class="topbar">
@@ -36,11 +36,10 @@
         <a th:href="@{/calendario}" class="topbar2">Procurar Eventos</a>
       </nav>
     </header>
-    
 
     <section class="search-section">
       <input type="text" id="searchInput" placeholder="Procurar por nome ou local" class="form-control" />
-      <button id="procurarEventos" class ="botaodebusca"><i class="btn btn-primary">Buscar</i></button>
+      <button id="procurarEventos" class="botaodebusca"><i class="btn btn-primary">Buscar</i></button>
     </section>
 
     <section class="map-section">
@@ -69,8 +68,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-
-    // Inicialização do mapa
     const map = L.map('map').setView([-26.3045, -48.8487], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -85,49 +82,33 @@
     const marcadoresEventos = [];
     let eventosOrdenados = [];
 
-    // Adiciona marcadores para todos os eventos do banco
+    // Carrega eventos
     fetch('/api/eventos')
       .then(res => res.json())
       .then(eventos => {
-        // Ordena por data de início (mais próximos primeiro)
-        eventosOrdenados = eventos
-          .filter(ev => ev.dataInicio)
-          .sort((a, b) => new Date(a.dataInicio) - new Date(b.dataInicio));
+        eventosOrdenados = eventos.filter(ev => ev.dataInicio).sort((a, b) => new Date(a.dataInicio) - new Date(b.dataInicio));
 
         eventos.forEach(ev => {
           if (ev.latitude && ev.longitude) {
-            // Calcula duração
-            let duracao = '';
-            if (ev.dataInicio && ev.dataFim) {
-              const inicio = new Date(ev.dataInicio);
-              const fim = new Date(ev.dataFim);
-              const diffMs = fim - inicio;
-              const diffMin = Math.floor(diffMs / 60000);
-              const horas = Math.floor(diffMin / 60);
-              const minutos = diffMin % 60;
-              duracao = `${horas}h ${minutos}min`;
-            }
-            // Formata datas
-            const dataInicio = ev.dataInicio ? new Date(ev.dataInicio).toLocaleString('pt-BR') : '';
+            const dataInicio = new Date(ev.dataInicio).toLocaleString('pt-BR');
             const dataFim = ev.dataFim ? new Date(ev.dataFim).toLocaleString('pt-BR') : '';
-            // Monta popup
+            const duracao = ev.dataFim ? `${Math.floor((new Date(ev.dataFim) - new Date(ev.dataInicio)) / 3600000)}h` : '';
+
             const marker = L.marker([ev.latitude, ev.longitude])
               .addTo(map)
-              .bindPopup(
-                `<b>${ev.nome}</b><br>
+              .bindPopup(`
+                <b>${ev.nome}</b><br>
                 ${ev.descricao || ''}<br>
                 <b>Início:</b> ${dataInicio}<br>
                 <b>Término:</b> ${dataFim}<br>
                 <b>Duração:</b> ${duracao}<br>
-                <b>Acesso:</b> ${ev.acesso || 'Não informado'}<br>
                 <b>Endereço:</b> ${ev.endereco || ''}<br>
-                <button onclick="window.location.href='/conferencia?id=${ev.id}'" class="btn btn-primary btn-sm mt-2">Ver Detalhes</button>`
-              );
+                <button onclick="window.location.href='/conferencia?id=${ev.id}'" class="btn btn-primary btn-sm mt-2">Ver Detalhes</button>
+              `);
             marcadoresEventos.push({ id: ev.id, marker });
           }
         });
 
-        // Preenche os cards dos próximos 3 eventos
         const cardsDiv = document.getElementById('eventCards');
         cardsDiv.innerHTML = '';
         eventosOrdenados.slice(0, 3).forEach(ev => {
@@ -135,9 +116,8 @@
           const card = document.createElement('div');
           card.className = 'card';
           card.style.cursor = 'pointer';
-          card.innerHTML = `<img src="${imgSrc}" alt="${ev.nome}" title="${ev.nome}"/>`;
-          card.onclick = function () {
-            // Seleciona o marcador correspondente e centraliza/abre popup
+          card.innerHTML = `<img src="${imgSrc}" alt="${ev.nome}" title="${ev.nome}" />`;
+          card.onclick = () => {
             const marcadorObj = marcadoresEventos.find(m => m.id === ev.id);
             if (marcadorObj) {
               map.setView(marcadorObj.marker.getLatLng(), 16);
@@ -148,13 +128,12 @@
         });
       });
 
-    // Adiciona marcadores vermelhos para as empresas
+    // Carrega empresas com ícone vermelho
     fetch('/api/empresas')
       .then(res => res.json())
       .then(empresas => {
         empresas.forEach(emp => {
           if (emp.latitude && emp.longitude) {
-            // Ícone vermelho do Leaflet padrão
             const redIcon = new L.Icon({
               iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
               shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -166,34 +145,54 @@
 
             L.marker([emp.latitude, emp.longitude], { icon: redIcon })
               .addTo(map)
-              .bindPopup(
-                `<b>${emp.nome}</b><br>
+              .bindPopup(`
+                <b>${emp.nome}</b><br>
                 ${emp.endereco || ''}<br>
                 <b>Email:</b> ${emp.email || ''}<br>
-                <b>Telefone:</b> ${emp.telefone || ''}`
-              );
+                <b>Telefone:</b> ${emp.telefone || ''}
+              `);
           }
         });
       });
 
-    // Clique no botão "Procurar Eventos"
-    document.getElementById("procurarEventos").addEventListener("click", function (e) {
+    // BUSCA INTELIGENTE
+    document.getElementById("procurarEventos").addEventListener("click", async function (e) {
       e.preventDefault();
-
-      const termo = document.getElementById("searchInput").value;
-
-      if (termo.trim() === "") {
-        alert("Digite um endereço ou nome de lugar!");
+      const termo = document.getElementById("searchInput").value.trim();
+      if (termo === "") {
+        alert("Digite um nome, local ou endereço!");
         return;
       }
 
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(termo + ", Joinville")}`;
+      // 1. Buscar por empresa
+      const empresas = await fetch('/api/empresas').then(res => res.json());
+      const emp = empresas.find(e => e.nome.toLowerCase().includes(termo.toLowerCase()));
+      if (emp && emp.latitude && emp.longitude) {
+        map.setView([emp.latitude, emp.longitude], 16);
+        L.popup().setLatLng([emp.latitude, emp.longitude])
+          .setContent(`<b>${emp.nome}</b><br>${emp.endereco || ''}`)
+          .openOn(map);
+        return;
+      }
 
+      // 2. Buscar por evento
+      const eventos = await fetch('/api/eventos').then(res => res.json());
+      const ev = eventos.find(e => e.nome.toLowerCase().includes(termo.toLowerCase()));
+      if (ev && ev.latitude && ev.longitude) {
+        map.setView([ev.latitude, ev.longitude], 16);
+        L.popup().setLatLng([ev.latitude, ev.longitude])
+          .setContent(`<b>${ev.nome}</b><br>${ev.descricao || ''}`)
+          .openOn(map);
+        return;
+      }
+
+      // 3. Buscar como endereço (OpenStreetMap)
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(termo + ", Joinville")}`;
       fetch(url)
         .then(res => res.json())
         .then(dados => {
           if (dados.length === 0) {
-            alert("Endereço não encontrado 😥");
+            alert("Nada encontrado 😥");
             return;
           }
 
@@ -202,22 +201,17 @@
           const nome = dados[0].display_name;
 
           map.setView([lat, lon], 16);
-
-          if (marcador) {
-            marcador.remove();
-          }
+          if (marcador) marcador.remove();
 
           marcador = L.marker([lat, lon])
             .addTo(map)
             .bindPopup(`<b>${nome}</b>`)
             .openPopup();
         })
-        .catch(() => {
-          alert("Erro na busca, tente novamente.");
-        });
+        .catch(() => alert("Erro na busca, tente novamente."));
     });
 
-    // Pressionar Enter aciona o botão de busca
+    // ENTER ativa a busca
     document.getElementById("searchInput").addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();

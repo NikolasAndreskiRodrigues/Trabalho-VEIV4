@@ -116,3 +116,21 @@ button {
   border-top: 1px solid #ddd;
   font-size: 14px;
 }
+
+#map {
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
+  margin: 20px auto;
+  border-radius: 10px;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: block;
+}
+
+/* Garante que o mapa não fique sobreposto por outros elementos */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 10px;
+}
