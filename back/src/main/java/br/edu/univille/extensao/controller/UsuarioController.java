@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import br.edu.univille.extensao.entity.Evento;
 import br.edu.univille.extensao.entity.Usuario;
@@ -25,6 +26,7 @@ import br.edu.univille.extensao.repository.EventoRepository;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -62,6 +64,20 @@ public class UsuarioController {
     @GetMapping("/{id}")
         public Usuario buscarPorId(@PathVariable Long id) {
         return usuarioRepository.findById(id).orElse(null);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(principal.getName());
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setSenha(null);
+            return ResponseEntity.ok(usuario);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
     }
 
     @PutMapping("/{id}")

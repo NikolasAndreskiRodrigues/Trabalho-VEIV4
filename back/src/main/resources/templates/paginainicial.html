@@ -30,10 +30,16 @@
     <header class="topbar">
       <div class="logo">📍 <strong>Mapa de Eventos de Joinville</strong></div>
       <nav class="nav-links">
+        <div th:if="${#httpServletRequest.remoteUser != null}">
+        <span>Bem-vindo, <strong th:text="${#httpServletRequest.remoteUser}"></strong>!😊👋</span>
+        <a href="/logout">Sair🔚</a>
+    </div>
+    <div th:unless="${#httpServletRequest.remoteUser != null}">
         <a th:href="@{/cadastrousuario}" class="topbar2">Crie sua conta</a>
         <a th:href="@{/loginusuario}" class="topbar2">Login</a>
         <a th:href="@{/cadastroempresa}" class="topbar2">Cadastre sua empresa</a>
         <a th:href="@{/calendario}" class="topbar2">Procurar Eventos</a>
+    </div>
       </nav>
     </header>
 
