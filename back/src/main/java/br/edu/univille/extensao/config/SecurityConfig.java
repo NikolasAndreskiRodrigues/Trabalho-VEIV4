@@ -23,13 +23,13 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated()
             ).formLogin(form -> form
-                .loginPage("/Loginusuario")
+                .loginPage("/loginusuario")
                 .defaultSuccessUrl("/paginainicial", true)
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/Loginusuario?logout")
+                .logoutSuccessUrl("/loginusuario?logout")
                 .permitAll()
             );
         return http.build();
