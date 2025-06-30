@@ -15,22 +15,9 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/swagger-ui.html",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/login",
-                    "/register",
-                    "/css/**",
-                    "/js/**"
+                    "/v3/api-docs/**"
                 ).permitAll()
-                .anyRequest().authenticated()
-            ).formLogin(form -> form
-                .loginPage("/loginusuario")
-                .defaultSuccessUrl("/paginainicial", true)
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/loginusuario?logout")
-                .permitAll()
+                .anyRequest().permitAll()
             );
         return http.build();
     }
