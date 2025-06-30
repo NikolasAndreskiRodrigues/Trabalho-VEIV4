@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adicionar Evento</title>
+  <link th:href="@{/adicionarevento.css}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <a th:href="@{/paginainicial}"><i class="fas fa-home"></i></a>
+      <a th:href="@{/calendario}"><i class="fas fa-calendar"></i></a>
+      <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
+      <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
+      <a th:href="@{/perfilempresarial}"><i class="fa fa-building"></i></a>
+      <a th:href="@{/}"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+
+    <main class="main-content">
+      <nav class="navbar bg-white border-bottom px-4">
+        <span class="navbar-brand">Adicionar Evento</span>
+        <div class="eventos-links">
+          <a th:href="@{/paginainicial}" class="topbar2">Home</a>
+          <a th:href="@{/calendario}" class="topbar2">Próximos Eventos</a>
+        </div>
+      </nav>
+
+      <div class="profile-box2">
+        <h3>Foto do Evento</h3>
+        <div class="photo-section">
+          <img id="preview" src="https://placehold.co/120x120" alt="Foto do Evento" style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px;" />
+          <input type="file" id="imagemInput" accept="image/*" style="display: none;" />
+          <button type="button" onclick="document.getElementById('imagemInput').click()">Carregar Imagem</button>
+        </div>
+
+        <form class="profile-form" id="formEvento">
+          <label>Nome do Evento:</label>
+          <input type="text" id="nome" placeholder="Nome do Evento" required />
+
+          <label>Descrição:</label>
+          <textarea id="descricao" placeholder="Descreva o evento" required></textarea>
+
+          <label>Capacidade:</label>
+          <input type="number" id="capacidade" placeholder="Capacidade" required />
+
+          <label>Acesso:</label>
+          <select id="acesso" required>
+            <option value="">Selecione</option>
+            <option value="Presencial">Presencial</option>
+            <option value="Remoto">Remoto</option>
+          </select>
+
+          <label>Endereço:</label>
+          <input type="text" id="endereco" placeholder="Endereço do local" required />
+
+          <div id="map" style="height: 300px; width: 100%; margin-bottom: 20px;"></div>
+
+          <label>Início:</label>
+          <input type="datetime-local" id="inicio" required />
+
+          <label>Término:</label>
+          <input type="datetime-local" id="termino" required />
+
+          <label>Organização:</label>
+          <select id="organizacao" required>
+            <option value="">Selecione a empresa</option>
+          </select>
+
+          <div class="buttons">
+            <button type="submit" class="apply">Adicionar</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    document.getElementById('imagemInput').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    let marcador = null;
+    let latSelecionada = null;
+    let lonSelecionada = null;
+
+    // Inicializa o mapa em Joinville
+    const map = L.map('map').setView([-26.3045, -48.8487], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contribuidores'
+    }).addTo(map);
+
+    // Clique no mapa para selecionar endereço
+    map.on('click', function(e) {
+      latSelecionada = e.latlng.lat;
+      lonSelecionada = e.latlng.lng;
+
+      if (marcador) {
+        marcador.setLatLng(e.latlng);
+      } else {
+        marcador = L.marker(e.latlng).addTo(map);
+      }
+
+      // Busca o endereço reverso e preenche o campo
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latSelecionada}&lon=${lonSelecionada}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.display_name) {
+            $('#endereco').val(data.display_name);
+          }
+        });
+    });
+
+    // Permite buscar endereço digitando
+    $('#endereco').on('blur', function() {
+      const endereco = $(this).val();
+      if (endereco.trim() === '') return;
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`)
+        .then(res => res.json())
+        .then(dados => {
+          if (dados.length === 0) {
+            alert("Endereço não encontrado 😥");
+            return;
+          }
+          const lat = parseFloat(dados[0].lat);
+          const lon = parseFloat(dados[0].lon);
+          latSelecionada = lat;
+          lonSelecionada = lon;
+          map.setView([lat, lon], 16);
+          if (marcador) {
+            marcador.setLatLng([lat, lon]);
+          } else {
+            marcador = L.marker([lat, lon]).addTo(map);
+          }
+        });
+    });
+
+    // Preenche o select de empresas
+    $.get('/api/empresas', function(empresas) {
+      empresas.forEach(function(empresa) {
+        $('#organizacao').append(
+          `<option value="${empresa.id}">${empresa.nome}</option>`
+        );
+      });
+    });
+
+    // Cadastro do evento
+    $('#formEvento').on('submit', async function (e) {
+      e.preventDefault();
+      const inicio = $('#inicio').val();
+      const termino = $('#termino').val();
+
+      // Validação: término não pode ser menor que início
+      if (inicio && termino && new Date(termino) < new Date(inicio)) {
+        alert('A data de término não pode ser menor que a data de início!');
+        return;
+      }
+
+      const endereco = $('#endereco').val();
+
+      let cidade = '';
+      if (latSelecionada && lonSelecionada) {
+        // Busca cidade pelo Nominatim
+        await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latSelecionada}&lon=${lonSelecionada}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.address) {
+              cidade = data.address.city || data.address.town || data.address.village || data.address.municipality || '';
+            }
+          });
+      } else {
+        // Extrai da string digitada
+        const partes = endereco.split(',');
+        cidade = partes.length >= 3 ? partes[partes.length - 3].trim() : '';
+      }
+
+      const evento = {
+        nome: $('#nome').val(),
+        descricao: $('#descricao').val(),
+        endereco: endereco,
+        cidade: cidade,
+        capacidade: $('#capacidade').val(),
+        organizacao: $('#organizacao option:selected').text(),
+        empresaId: $('#organizacao').val(), // Agora será o ID correto
+        dataInicio: inicio,
+        dataFim: termino,
+        acesso: $('#acesso').val(),
+        latitude: latSelecionada,
+        longitude: lonSelecionada
+      };
+
+      $.ajax({
+        url: '/api/eventos',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(evento),
+        success: function (eventoSalvo) {
+          // eventoSalvo deve ser o objeto evento retornado pelo backend (com id)
+          const file = $('#imagemInput')[0].files[0];
+          if (file && eventoSalvo && eventoSalvo.id) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+              url: '/api/eventos/' + eventoSalvo.id + '/upload-foto',
+              method: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function () {
+                alert('Evento cadastrado com sucesso!');
+                window.location.href = '/calendario';
+              },
+              error: function (xhr) {
+                alert('Evento cadastrado, mas erro ao enviar foto: ' + (xhr.responseText || 'Tente novamente.'));
+                window.location.href = '/calendario';
+              }
+            });
+          } else {
+            alert('Evento cadastrado com sucesso!');
+            window.location.href = '/calendario';
+          }
+        },
+        error: function (xhr) {
+          alert('Erro ao cadastrar: ' + (xhr.responseText || 'Tente novamente.'));
+        }
+      });
+    });
+  </script>
+</body>
+</html>

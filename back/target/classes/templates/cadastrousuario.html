@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrar Usuario</title>
+  <link rel="stylesheet" href="cadastrousuario.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header class="topbar">
+    <div class="logo"><strong>Mapa de Eventos de Joinville</strong></div>
+    <nav class="nav-links">
+      <a th:href="@{/paginainicial}" class="topbar2">Home</a>
+    </nav>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="login-container">
+    <div class="illustration">
+      <img th:src="@{/foto/imagem-login.png}" alt="Login" />
+    </div> 
+
+    <div class="form-box">
+      <h2>Cadastro</h2>
+      <form id="cadastroForm">
+        <label>Nome Completo</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo" required />
+
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Digite seu email" required />
+
+        <label>Senha</label>
+        <input type="password" id="senha" placeholder="********" required />
+        
+        <button type="submit" class="submit">Cadastro</button>
+      </form>
+      <div style="margin-top: 15px; text-align: center;">
+        <span>Já tem uma conta?</span>
+        <a href="/loginusuario" style="margin-left: 5px;">Login</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div>Privacidade</div>
+    <div>Termos e condições</div>
+    <div>Contato</div>
+  </footer>
+
+  <script>
+  $(document).ready(function () {
+    $('#cadastroForm').on('submit', function (e) {
+      e.preventDefault();
+      const nome = $('#nome').val();
+      const email = $('#email').val();
+      const senha = $('#senha').val();
+
+      // Validação simples
+      if (!email.includes('@') || !email.includes('.')) {
+        alert('Por favor, insira um e-mail válido com @ e domínio.');
+        return;
+      }
+
+      $.ajax({
+        url: '/api/usuarios/cadastro',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ nome, email, senha }),
+        success: function () {
+          alert('Usuário cadastrado com sucesso!');
+          window.location.href = '/loginusuario'; // Redireciona para login, se desejar
+        },
+        error: function (xhr) {
+          alert('Erro ao cadastrar: ' + (xhr.responseText || 'Tente novamente.'));
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa de Eventos de Joinville</title>
+
+  <link rel="stylesheet" th:href="@{/paginainicial.css}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 400px; width: 100%; margin-top: 20px; }
+    .search-section { margin: 20px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <a th:href="@{/paginainicial}"><i class="fas fa-home"></i></a>
+    <a th:href="@{/calendario}"><i class="fas fa-calendar"></i></a>
+    <a th:href="@{/adicionarevento}"><i class="fas fa-plus-square"></i></a>
+    <a th:href="@{/perfiluser}"><i class="fas fa-cog"></i></a>
+    <a th:href="@{/perfilempresarial}"><i class="fa fa-building"></i></a>
+    <a th:href="@{/}"><i class="fas fa-sign-out-alt"></i></a>
+  </div>
+
+  <div class="container">
+    <header class="topbar">
+      <div class="logo">📍 <strong>Mapa de Eventos de Joinville</strong></div>
+      <nav class="nav-links">
+        <a th:href="@{/cadastrousuario}" class="topbar2">Crie sua conta</a>
+        <a th:href="@{/loginusuario}" class="topbar2">Login</a>
+        <a th:href="@{/cadastroempresa}" class="topbar2">Cadastre sua empresa</a>
+        <a th:href="@{/calendario}" class="topbar2">Procurar Eventos</a>
+      </nav>
+    </header>
+
+    <section class="search-section">
+      <input type="text" id="searchInput" placeholder="Procurar por nome ou local" class="form-control" />
+      <button id="procurarEventos" class="botaodebusca"><i class="btn btn-primary">Buscar</i></button>
+    </section>
+
+    <section class="map-section">
+      <div id="map"></div>
+    </section>
+
+    <section class="eventos-futuros">
+      <h2>Futuros Eventos</h2>
+      <div class="cards" id="eventCards"></div>
+    </section>
+
+    <section class="instrucoes">
+      <h3>Como Usar o mapa de eventos</h3>
+      <p>
+        Mapa de Eventos é o seu melhor guia para descobrir eventos em sua cidade.
+        Use a barra de pesquisa acima para filtrar eventos por nome, local ou data.
+        Clique nos marcadores de eventos no mapa para ver mais detalhes.
+      </p>
+    </section>
+
+    <footer class="rodape">
+      <div>Privacidade &nbsp; Termos de</div>
+      <div>Contato</div>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([-26.3045, -48.8487], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contribuidores'
+    }).addTo(map);
+
+    let marcador = L.marker([-26.3045, -48.8487])
+      .addTo(map)
+      .bindPopup('<b>Centro de Joinville</b><br>Evento Principal')
+      .openPopup();
+
+    const marcadoresEventos = [];
+    let eventosOrdenados = [];
+
+    // Carrega eventos
+    fetch('/api/eventos')
+      .then(res => res.json())
+      .then(eventos => {
+        eventosOrdenados = eventos.filter(ev => ev.dataInicio).sort((a, b) => new Date(a.dataInicio) - new Date(b.dataInicio));
+
+        eventos.forEach(ev => {
+          if (ev.latitude && ev.longitude) {
+            const dataInicio = new Date(ev.dataInicio).toLocaleString('pt-BR');
+            const dataFim = ev.dataFim ? new Date(ev.dataFim).toLocaleString('pt-BR') : '';
+            const duracao = ev.dataFim ? `${Math.floor((new Date(ev.dataFim) - new Date(ev.dataInicio)) / 3600000)}h` : '';
+
+            const marker = L.marker([ev.latitude, ev.longitude])
+              .addTo(map)
+              .bindPopup(`
+                <b>${ev.nome}</b><br>
+                ${ev.descricao || ''}<br>
+                <b>Início:</b> ${dataInicio}<br>
+                <b>Término:</b> ${dataFim}<br>
+                <b>Duração:</b> ${duracao}<br>
+                <b>Endereço:</b> ${ev.endereco || ''}<br>
+                <button onclick="window.location.href='/conferencia?id=${ev.id}'" class="btn btn-primary btn-sm mt-2">Ver Detalhes</button>
+              `);
+            marcadoresEventos.push({ id: ev.id, marker });
+          }
+        });
+
+        const cardsDiv = document.getElementById('eventCards');
+        cardsDiv.innerHTML = '';
+        eventosOrdenados.slice(0, 3).forEach(ev => {
+          const imgSrc = ev.foto ? ev.foto : 'https://placehold.co/300x220?text=Evento';
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.cursor = 'pointer';
+          card.innerHTML = `<img src="${imgSrc}" alt="${ev.nome}" title="${ev.nome}" />`;
+          card.onclick = () => {
+            const marcadorObj = marcadoresEventos.find(m => m.id === ev.id);
+            if (marcadorObj) {
+              map.setView(marcadorObj.marker.getLatLng(), 16);
+              marcadorObj.marker.openPopup();
+            }
+          };
+          cardsDiv.appendChild(card);
+        });
+      });
+
+    // Carrega empresas com ícone vermelho
+    fetch('/api/empresas')
+      .then(res => res.json())
+      .then(empresas => {
+        empresas.forEach(emp => {
+          if (emp.latitude && emp.longitude) {
+            const redIcon = new L.Icon({
+              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+              shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            });
+
+            L.marker([emp.latitude, emp.longitude], { icon: redIcon })
+              .addTo(map)
+              .bindPopup(`
+                <b>${emp.nome}</b><br>
+                ${emp.endereco || ''}<br>
+                <b>Email:</b> ${emp.email || ''}<br>
+                <b>Telefone:</b> ${emp.telefone || ''}
+              `);
+          }
+        });
+      });
+
+    // BUSCA INTELIGENTE
+    document.getElementById("procurarEventos").addEventListener("click", async function (e) {
+      e.preventDefault();
+      const termo = document.getElementById("searchInput").value.trim();
+      if (termo === "") {
+        alert("Digite um nome, local ou endereço!");
+        return;
+      }
+
+      // 1. Buscar por empresa
+      const empresas = await fetch('/api/empresas').then(res => res.json());
+      const emp = empresas.find(e => e.nome.toLowerCase().includes(termo.toLowerCase()));
+      if (emp && emp.latitude && emp.longitude) {
+        map.setView([emp.latitude, emp.longitude], 16);
+        L.popup().setLatLng([emp.latitude, emp.longitude])
+          .setContent(`<b>${emp.nome}</b><br>${emp.endereco || ''}`)
+          .openOn(map);
+        return;
+      }
+
+      // 2. Buscar por evento
+      const eventos = await fetch('/api/eventos').then(res => res.json());
+      const ev = eventos.find(e => e.nome.toLowerCase().includes(termo.toLowerCase()));
+      if (ev && ev.latitude && ev.longitude) {
+        map.setView([ev.latitude, ev.longitude], 16);
+        L.popup().setLatLng([ev.latitude, ev.longitude])
+          .setContent(`<b>${ev.nome}</b><br>${ev.descricao || ''}`)
+          .openOn(map);
+        return;
+      }
+
+      // 3. Buscar como endereço (OpenStreetMap)
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(termo + ", Joinville")}`;
+      fetch(url)
+        .then(res => res.json())
+        .then(dados => {
+          if (dados.length === 0) {
+            alert("Nada encontrado 😥");
+            return;
+          }
+
+          const lat = parseFloat(dados[0].lat);
+          const lon = parseFloat(dados[0].lon);
+          const nome = dados[0].display_name;
+
+          map.setView([lat, lon], 16);
+          if (marcador) marcador.remove();
+
+          marcador = L.marker([lat, lon])
+            .addTo(map)
+            .bindPopup(`<b>${nome}</b>`)
+            .openPopup();
+        })
+        .catch(() => alert("Erro na busca, tente novamente."));
+    });
+
+    // ENTER ativa a busca
+    document.getElementById("searchInput").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("procurarEventos").click();
+      }
+    });
+  </script>
+</body>
+</html>
